@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>X-REWARDS PRO | Ultimate Casino</title>
+    <title>X-REWARDS PRO | HARD MODE</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
@@ -11,28 +11,21 @@
         :root {
             --primary: #9d3cfb;
             --primary-dark: #7a2bc9;
-            --primary-glow: rgba(157, 60, 251, 0.4);
             --bg: #0a0a0f;
             --card: #12121a;
-            --card-hover: #1a1a25;
             --gold: #ffca28;
-            --gold-glow: rgba(255, 202, 40, 0.3);
             --win: #4caf50;
-            --win-glow: rgba(76, 175, 80, 0.4);
-            --danger: #f44336;
-            --text: #ffffff;
-            --text-secondary: #8888aa;
+            --lose: #f44336;
         }
         
         body { 
             background: var(--bg); 
-            color: var(--text); 
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            color: white; 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
             overflow-x: hidden;
             min-height: 100vh;
         }
         
-        /* Navbar */
         .navbar { 
             display: flex; 
             justify-content: space-between; 
@@ -41,13 +34,10 @@
             background: rgba(18, 18, 26, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(157, 60, 251, 0.3);
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
         }
         
         .logo {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             background: linear-gradient(135deg, var(--gold), var(--primary));
             -webkit-background-clip: text;
@@ -55,190 +45,116 @@
             color: transparent;
         }
         
-        .stats {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .bal-box, .level-box {
-            background: rgba(157, 60, 251, 0.15);
+        .bal-box {
+            background: rgba(255, 202, 40, 0.15);
             padding: 6px 14px;
             border-radius: 30px;
             font-weight: bold;
-            border: 1px solid rgba(157, 60, 251, 0.4);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
+            border: 1px solid var(--gold);
+            color: var(--gold);
         }
         
-        .bal-box { color: var(--gold); border-color: var(--gold); }
-        .level-box { color: var(--primary); }
-        
-        /* Menu Grid */
         .container { 
             padding: 20px; 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); 
-            gap: 14px; 
-            max-width: 600px;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+            gap: 12px; 
+            max-width: 500px;
             margin: 0 auto;
         }
         
         .card { 
             background: linear-gradient(145deg, var(--card), #0e0e14);
-            border-radius: 22px; 
-            padding: 18px 12px; 
+            border-radius: 20px; 
+            padding: 15px 8px; 
             text-align: center; 
             border: 1px solid #252535;
             transition: all 0.2s ease;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         
-        .card:active { transform: scale(0.96); background: var(--card-hover); border-color: var(--primary); }
-        .card i { font-size: 38px; display: block; margin-bottom: 8px; filter: drop-shadow(0 0 8px var(--primary)); }
-        .card b { font-size: 14px; }
+        .card:active { transform: scale(0.96); border-color: var(--primary); }
+        .card i { font-size: 32px; display: block; margin-bottom: 5px; }
+        .card b { font-size: 12px; }
+        .card small { font-size: 9px; color: #888; display: block; }
         
-        /* Overlay */
         #overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.98); z-index: 1000; display: none; 
             flex-direction: column; align-items: center; justify-content: center;
-            backdrop-filter: blur(15px);
         }
         .close { 
-            position: absolute; top: 20px; right: 25px; font-size: 45px; 
-            color: #888; cursor: pointer; transition: 0.2s;
-            width: 50px; text-align: center;
+            position: absolute; top: 20px; right: 25px; font-size: 40px; 
+            color: #888; cursor: pointer;
         }
-        .close:active { color: white; transform: scale(0.9); }
         
-        .game-view { width: 95%; max-width: 400px; text-align: center; animation: pop 0.3s ease; }
+        .game-view { width: 95%; max-width: 380px; text-align: center; animation: pop 0.3s ease; }
         @keyframes pop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
         
         .btn-action { 
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white; border: none; padding: 14px 25px; border-radius: 50px; 
-            font-weight: bold; font-size: 18px; margin: 15px auto; width: 80%;
-            cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(157,60,251,0.3);
-        }
-        .btn-action:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(157,60,251,0.5); }
-        
-        /* Wheel */
-        #wheel { 
-            width: 260px; height: 260px; border-radius: 50%; 
-            border: 3px solid var(--gold); position: relative; margin: 20px auto;
-            transition: transform 4s cubic-bezier(0.2, 0.9, 0.1, 1);
-            background: conic-gradient(#ff4757 0deg 60deg, #1e90ff 60deg 120deg, #2ed573 120deg 180deg, #ffa502 180deg 240deg, #9d3cfb 240deg 300deg, #ff6b81 300deg 360deg);
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-        .wheel-pointer { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-top: 35px solid var(--gold); filter: drop-shadow(0 2px 5px black); z-index: 15; }
-        
-        /* Slot mashin */
-        .slot-machine {
-            background: #1a1a2e;
-            border-radius: 20px;
-            padding: 20px;
-            margin: 20px auto;
-        }
-        .slot-reels {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-size: 65px;
-            background: #0a0a0f;
-            padding: 30px;
-            border-radius: 15px;
-            border: 2px solid var(--primary);
-        }
-        
-        /* Animations */
-        .win-glow { animation: winFlash 0.6s ease; }
-        @keyframes winFlash {
-            0%, 100% { text-shadow: 0 0 0px var(--win); }
-            50% { text-shadow: 0 0 25px var(--win); transform: scale(1.05); color: var(--win); }
-        }
-        
-        .shake {
-            animation: shakeAnim 0.3s ease-in-out;
-        }
-        @keyframes shakeAnim {
-            0%,100%{ transform: translateX(0); }
-            25%{ transform: translateX(-8px); }
-            75%{ transform: translateX(8px); }
-        }
-        
-        .particle {
-            position: fixed;
-            pointer-events: none;
-            font-size: 24px;
-            animation: floatUp 0.8s forwards;
-            z-index: 2000;
-        }
-        @keyframes floatUp {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
-        }
-        
-        /* Progress bar */
-        .level-progress {
-            width: 100%;
-            height: 6px;
-            background: #2a2a3a;
-            border-radius: 10px;
-            margin-top: 5px;
-            overflow: hidden;
-        }
-        .level-progress-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--gold), var(--primary));
-            transition: width 0.3s;
-        }
-        
-        /* Bonus kunlik */
-        .daily-bonus-btn {
-            background: linear-gradient(135deg, #ffb347, #ff6b35);
-            padding: 8px 15px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: bold;
+            color: white; border: none; padding: 12px 20px; border-radius: 50px; 
+            font-weight: bold; font-size: 16px; margin: 15px auto; width: 80%;
             cursor: pointer;
         }
         
-        @media (max-width: 480px) {
-            .container { gap: 12px; padding: 15px; }
-            .card { padding: 14px 8px; }
-            .card i { font-size: 32px; }
+        #wheel { 
+            width: 240px; height: 240px; border-radius: 50%; 
+            border: 3px solid var(--gold); margin: 20px auto;
+            transition: transform 4s cubic-bezier(0.2, 0.9, 0.1, 1);
+            background: conic-gradient(#ff4757 0deg 72deg, #1e90ff 72deg 144deg, #2ed573 144deg 216deg, #ffa502 216deg 288deg, #9d3cfb 288deg 360deg);
+        }
+        .wheel-pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid var(--gold); z-index: 15; }
+        
+        .slot-reels {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 55px;
+            background: #0a0a0f;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px;
+        }
+        
+        .win-glow { animation: winFlash 0.6s ease; }
+        @keyframes winFlash {
+            0%, 100% { text-shadow: none; }
+            50% { text-shadow: 0 0 20px var(--win); color: var(--win); }
+        }
+        
+        .lose-shake { animation: shake 0.3s ease; }
+        @keyframes shake {
+            0%,100%{ transform: translateX(0); }
+            25%{ transform: translateX(-5px); }
+            75%{ transform: translateX(5px); }
+        }
+        
+        .warning {
+            color: var(--lose);
+            font-size: 12px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
 <div class="navbar">
-    <div class="logo">⚡ X-REWARDS PRO</div>
-    <div class="stats">
-        <div class="bal-box">🪙 <span id="bal">100</span></div>
-        <div class="level-box">⭐ Lv <span id="level">1</span></div>
-        <div class="daily-bonus-btn" onclick="claimDailyBonus()">🎁 Daily</div>
-    </div>
-</div>
-<div class="level-progress" style="width: 90%; margin: 8px auto 0;">
-    <div id="levelProgress" class="level-progress-fill"></div>
+    <div class="logo">⚡ X-REWARDS | HARD MODE</div>
+    <div class="bal-box">🪙 <span id="bal">1</span></div>
 </div>
 
 <div class="container">
-    <div class="card" onclick="openGame('wheel')"><i>🎡</i><b>Wheel</b><span style="font-size:10px; display:block;">x2-x10</span></div>
-    <div class="card" onclick="openGame('slots')"><i>🎰</i><b>Slots</b><span style="font-size:10px;">x3 Jackpot</span></div>
-    <div class="card" onclick="openGame('dice')"><i>🎲</i><b>Dice</b><span style="font-size:10px;">x2-x5</span></div>
-    <div class="card" onclick="openGame('coin')"><i>🪙</i><b>Coin</b><span style="font-size:10px;">x2</span></div>
-    <div class="card" onclick="openGame('box')"><i>🎁</i><b>Box</b><span style="font-size:10px;">x1-x10</span></div>
-    <div class="card" onclick="openGame('apple')"><i>🍎</i><b>Apple</b><span style="font-size:10px;">x2-x4</span></div>
-    <div class="card" onclick="openGame('rps')"><i>✂️</i><b>RPS</b><span style="font-size:10px;">x3</span></div>
-    <div class="card" onclick="openGame('card')"><i>🃏</i><b>Cards</b><span style="font-size:10px;">x2-x8</span></div>
-    <div class="card" onclick="openGame('guess')"><i>🔢</i><b>Guess</b><span style="font-size:10px;">x4</span></div>
-    <div class="card" onclick="openGame('bomb')"><i>💣</i><b>Mines</b><span style="font-size:10px;">x3-x7</span></div>
+    <div class="card" onclick="openGame('wheel')"><i>🎡</i><b>Wheel</b><small>🎲 tikish: 1</small></div>
+    <div class="card" onclick="openGame('slots')"><i>🎰</i><b>Slots</b><small>🎲 tikish: 2</small></div>
+    <div class="card" onclick="openGame('dice')"><i>🎲</i><b>Dice</b><small>🎲 tikish: 1</small></div>
+    <div class="card" onclick="openGame('coin')"><i>🪙</i><b>Coin</b><small>🎲 tikish: 1</small></div>
+    <div class="card" onclick="openGame('box')"><i>🎁</i><b>Box</b><small>🎲 tikish: 1</small></div>
+    <div class="card" onclick="openGame('apple')"><i>🍎</i><b>Apple</b><small>🎲 tikish: 1</small></div>
+    <div class="card" onclick="openGame('rps')"><i>✂️</i><b>RPS</b><small>🎲 tikish: 1</small></div>
+    <div class="card" onclick="openGame('card')"><i>🃏</i><b>Cards</b><small>🎲 tikish: 1</small></div>
+    <div class="card" onclick="openGame('guess')"><i>🔢</i><b>Guess</b><small>🎲 tikish: 1</small></div>
+    <div class="card" onclick="openGame('bomb')"><i>💣</i><b>Mines</b><small>🎲 tikish: 1</small></div>
 </div>
 
 <div id="overlay">
@@ -248,126 +164,86 @@
 
 <script>
     let tg = window.Telegram.WebApp;
-    let balance = 100;
-    let totalWin = 0;
-    let gamesPlayed = 0;
-    let level = 1;
-    let levelExp = 0;
-    let lastDaily = localStorage.getItem('lastDaily') || 0;
-    let highScore = localStorage.getItem('highScore') || 100;
-    
+    let balance = 1;  // BOSHLANG'ICH BALANS 1 TANGA!
+    let rotation = 0;
     tg.expand();
     
-    function updateUI() {
+    function updateBal() { 
         document.getElementById('bal').innerText = Math.floor(balance);
-        document.getElementById('level').innerText = level;
-        let nextExp = level * 200;
-        let percent = (levelExp / nextExp) * 100;
-        document.getElementById('levelProgress').style.width = percent + '%';
-        if(balance > highScore) { highScore = balance; localStorage.setItem('highScore', highScore); }
     }
     
-    function addExp(amount) {
-        levelExp += amount;
-        let needed = level * 200;
-        if(levelExp >= needed) {
-            level++;
-            levelExp -= needed;
-            createParticles('⭐');
-            playSound('levelup');
-            alert(`🥳 LEVEL UP! Siz ${level}-darajaga chiqdingiz! +50 tanga bonus!`);
-            balance += 50;
-        }
-        updateUI();
-    }
-    
-    function pay(amount = 1) {
+    // TIKISH (har bir o'yin uchun)
+    function pay(amount = 1) { 
         if(balance < amount) { 
-            alert("❌ Tanga yetarli emas! Daily bonus oling yoki kam tikish bilan o'ynang.");
+            alert("❌ Tanga yetarli emas! Kunlik bonus oling yoki keyinroq urinib ko'ring!");
             return false; 
         }
         balance -= amount; 
-        gamesPlayed++;
-        updateUI(); 
-        return true;
+        updateBal(); 
+        return true; 
     }
     
-    function win(amount) {
-        let winAmount = Math.floor(amount);
-        balance += winAmount;
-        totalWin += winAmount;
-        updateUI();
-        addExp(winAmount);
-        createParticles('💰');
-        playSound('win');
-        return winAmount;
+    // YUTUQ (qiyinlashtirilgan)
+    function win(amount) { 
+        balance += amount; 
+        updateBal(); 
+        return amount;
     }
     
-    function getRandomWin(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min);
+    // TASODIFIY YUTUQ (kichik ehtimol)
+    function getRandomWin() {
+        let r = Math.random();
+        if(r < 0.15) return 3;      // 15% - 3 tanga
+        if(r < 0.35) return 2;      // 20% - 2 tanga
+        if(r < 0.50) return 1;      // 15% - 1 tanga
+        return 0;                    // 50% - yutuq yo'q
     }
     
-    function createParticles(emoji) {
-        for(let i=0; i<10; i++) {
-            let p = document.createElement('div');
-            p.className = 'particle';
-            p.innerText = emoji;
-            p.style.left = Math.random() * window.innerWidth + 'px';
-            p.style.bottom = '30%';
-            p.style.position = 'fixed';
-            document.body.appendChild(p);
-            setTimeout(() => p.remove(), 800);
+    // JACKPOT (juda kam)
+    function getJackpot() {
+        if(Math.random() < 0.05) {   // 5% jackpot
+            return Math.floor(Math.random() * 5) + 5; // 5-10 tanga
         }
+        return 0;
     }
     
-    function playSound(type) {
-        // Simulated beep/vibrate for web, can implement Audio later
-        if(navigator.vibrate) navigator.vibrate(50);
-        // Inline audio not necessary but can add simple beep context later
+    function createParticles() {
+        // oddiy effekt
     }
     
-    function claimDailyBonus() {
-        let now = Date.now();
-        let oneDay = 86400000;
-        if(now - lastDaily > oneDay) {
-            let bonus = 50 + level * 5;
-            balance += bonus;
-            lastDaily = now;
-            localStorage.setItem('lastDaily', lastDaily);
-            updateUI();
-            createParticles('🎁');
-            alert(`✅ Kunlik bonus: ${bonus} tanga!`);
-        } else {
-            let hours = Math.floor((oneDay - (now - lastDaily)) / 3600000);
-            alert(`⏳ Keyingi bonus ${hours} soatdan keyin.`);
-        }
-    }
-    
-    // ------------------- GAMES LOGIC -------------------
     function openGame(game) {
         const c = document.getElementById('game-content');
         document.getElementById('overlay').style.display = 'flex';
         c.innerHTML = "";
         
         let templates = {
-            wheel: `<div style="position:relative; width:260px; margin:auto;"><div class="wheel-pointer"></div><div id="wheel"></div></div><h3 id="msg">Aylantir, omad!</h3><button class="btn-action" onclick="runWheel()">🎡 AYLANTIRISH (-1)</button>`,
-            slots: `<div class="slot-machine"><div id="slotRes" class="slot-reels">🎰 🎰 🎰</div></div><button class="btn-action" onclick="runSlots()">🎰 TORTISH (-1)</button>`,
-            dice: `<div id="diceRes" style="font-size: 100px; margin: 30px;">🎲</div><button class="btn-action" onclick="runDice()">🎲 TASHLASH (-1)</button>`,
-            coin: `<div id="coinRes" style="font-size: 100px;">🪙</div><div style="display:flex; gap:15px; justify-content:center"><button class="btn-action" onclick="runCoin('B')">🦅 BURGUT</button><button class="btn-action" onclick="runCoin('G')">🏛️ GERB</button></div>`,
-            box: `<div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;"><div class="boxItem" onclick="runBox(this)" style="font-size:70px; cursor:pointer; background:#222; padding:15px; border-radius:20px;">🎁</div><div class="boxItem" onclick="runBox(this)" style="font-size:70px; cursor:pointer; background:#222; padding:15px; border-radius:20px;">🎁</div><div class="boxItem" onclick="runBox(this)" style="font-size:70px; cursor:pointer; background:#222; padding:15px; border-radius:20px;">🎁</div></div><p>🔮 1-10 tanga orasida sovg'a!</p>`,
-            apple: `<div id="appleRes" style="font-size: 100px;">🍏</div><button class="btn-action" onclick="runApple()">🍎 OLMA TER (-1)</button>`,
-            rps: `<div id="rpsRes" style="font-size:80px; margin:20px;">🤖 ?</div><div style="display:flex; gap:10px; justify-content:center"><button class="btn-action" onclick="runRPS('✊')">✊</button><button class="btn-action" onclick="runRPS('✋')">✋</button><button class="btn-action" onclick="runRPS('✌️')">✌️</button></div>`,
-            card: `<div id="cardRes" style="font-size:100px;">🃟</div><button class="btn-action" onclick="runCard()">🃏 KARTANI OCH (-1)</button>`,
-            guess: `<h3>1,2 yoki 3?</h3><div style="display:flex; gap:10px; justify-content:center"><button class="btn-action" style="width:70px" onclick="runGuess(1)">1</button><button class="btn-action" style="width:70px" onclick="runGuess(2)">2</button><button class="btn-action" style="width:70px" onclick="runGuess(3)">3</button></div><p>Topilganda x4 yutuq!</p>`,
-            bomb: `<div id="bombRes" style="font-size:100px;">⛏️</div><button class="btn-action" onclick="runBomb()">💎 QAZISH (-1)</button>`
+            wheel: `<div style="position:relative; width:240px; margin:auto;"><div class="wheel-pointer"></div><div id="wheel"></div></div><h3 id="msg">🎡 Tikish: 1 tanga</h3><button class="btn-action" onclick="runWheel()">AYLANTIR</button><div class="warning">⚠️ Yutish ehtimoli 50%</div>`,
+            slots: `<div class="slot-reels" id="slotRes">🎰 🎰 🎰</div><button class="btn-action" onclick="runSlots()">TORTISH (2 tanga)</button><div class="warning">⚠️ Jackpot 5%</div>`,
+            dice: `<div id="diceRes" style="font-size: 80px; margin: 30px;">🎲</div><button class="btn-action" onclick="runDice()">TASHLASH (1 tanga)</button><div class="warning">⚠️ 4-5-6 yutsa 2-3 tanga</div>`,
+            coin: `<div id="coinRes" style="font-size: 80px;">🪙</div><div style="display:flex; gap:10px; justify-content:center"><button class="btn-action" onclick="runCoin('B')">🦅 BURGUT</button><button class="btn-action" onclick="runCoin('G')">🏛️ GERB</button></div><div class="warning">⚠️ To'g'ri topsangiz 2 tanga</div>`,
+            box: `<div style="display:flex; gap:15px; justify-content:center;"><div onclick="runBox(this)" style="font-size:60px; cursor:pointer; background:#222; padding:10px; border-radius:15px;">🎁</div><div onclick="runBox(this)" style="font-size:60px; cursor:pointer; background:#222; padding:10px; border-radius:15px;">🎁</div><div onclick="runBox(this)" style="font-size:60px; cursor:pointer; background:#222; padding:10px; border-radius:15px;">🎁</div></div><div class="warning">⚠️ 1-5 tanga orasida</div>`,
+            apple: `<div id="appleRes" style="font-size: 80px;">🍏</div><button class="btn-action" onclick="runApple()">TER (1 tanga)</button><div class="warning">⚠️ 40% yutish, 60% yutqazish</div>`,
+            rps: `<div id="rpsRes" style="font-size:60px;">🤖 ?</div><div style="display:flex; gap:5px"><button class="btn-action" onclick="runRPS('✊')">✊</button><button class="btn-action" onclick="runRPS('✋')">✋</button><button class="btn-action" onclick="runRPS('✌️')">✌️</button></div><div class="warning">⚠️ Yutsangiz 2 tanga</div>`,
+            card: `<div id="cardRes" style="font-size:80px;">🃟</div><button class="btn-action" onclick="runCard()">OCH (1 tanga)</button><div class="warning">⚠️ Qizil kelsa 2 tanga, qora kelsa 1 tanga</div>`,
+            guess: `<h3>1, 2 yoki 3?</h3><div style="display:flex; gap:10px"><button class="btn-action" style="width:60px" onclick="runGuess(1)">1</button><button class="btn-action" style="width:60px" onclick="runGuess(2)">2</button><button class="btn-action" style="width:60px" onclick="runGuess(3)">3</button></div><div class="warning">⚠️ To'g'ri topsangiz 3 tanga</div>`,
+            bomb: `<div id="bombRes" style="font-size:80px;">⛏️</div><button class="btn-action" onclick="runBomb()">QAZISH (1 tanga)</button><div class="warning">⚠️ 35% xazina topish, 65% portlash</div>`
         };
         c.innerHTML = templates[game];
+        
+        if(game === 'wheel') {
+            setTimeout(() => {
+                let wheel = document.getElementById('wheel');
+                if(wheel) {
+                    let sectors = [0,1,2,3,4];
+                    // wheel style set
+                }
+            }, 100);
+        }
     }
     
-    // Wheel
-    let rotation = 0;
+    // WHEEL - qiyin
     function runWheel() {
-        if(!pay()) return;
+        if(!pay(1)) return;
         const wheel = document.getElementById('wheel');
         const msg = document.getElementById('msg');
         let spins = 1800 + Math.floor(Math.random() * 1800);
@@ -376,47 +252,58 @@
         setTimeout(() => {
             let finalAngle = rotation % 360;
             let prize = 0;
-            if(finalAngle < 60) prize = 2;
-            else if(finalAngle < 120) prize = 5;
-            else if(finalAngle < 180) prize = 10;
-            else if(finalAngle < 240) prize = 1;
-            else if(finalAngle < 300) prize = 3;
-            else prize = 7;
-            let w = win(prize);
-            msg.innerHTML = `🎉 YUTUQ: ${w} tanga! 🎉`;
+            // Qiyinlashtirilgan yutuq zonasi
+            if(finalAngle < 45) prize = 3;      // 12.5%
+            else if(finalAngle < 90) prize = 2;  // 12.5%
+            else if(finalAngle < 135) prize = 1; // 12.5%
+            else prize = 0;                      // 62.5% yutuq yo'q
+            
+            if(prize > 0) {
+                win(prize);
+                msg.innerHTML = `🎉 YUTUQ: ${prize} tanga! 🎉`;
+                msg.style.color = "#4caf50";
+            } else {
+                msg.innerHTML = `😭 YUTUQ YO'Q! Qaytadan urinib ko'ring!`;
+                msg.style.color = "#f44336";
+            }
             msg.classList.add('win-glow');
             setTimeout(() => msg.classList.remove('win-glow'), 800);
         }, 4000);
     }
     
-    // Slots
+    // SLOTS - qiyin (2 tanga tikish)
     function runSlots() {
-        if(!pay()) return;
-        let symbols = ['🍒','🍋','🍊','💎','7️⃣','⭐'];
+        if(!pay(2)) return;
+        let symbols = ['🍒','🍋','🍊','💎','7️⃣'];
         let reel = document.getElementById('slotRes');
-        let a = symbols[Math.floor(Math.random()*6)];
-        let b = symbols[Math.floor(Math.random()*6)];
-        let c = symbols[Math.floor(Math.random()*6)];
-        reel.classList.add('shake');
+        let a = symbols[Math.floor(Math.random()*5)];
+        let b = symbols[Math.floor(Math.random()*5)];
+        let c = symbols[Math.floor(Math.random()*5)];
+        
+        reel.classList.add('lose-shake');
         setTimeout(() => {
             reel.innerText = `${a} ${b} ${c}`;
-            reel.classList.remove('shake');
-            if(a === b && b === c) {
-                let jackpot = getRandomWin(10, 30);
-                win(jackpot);
-                alert(`🔥 JACKPOT! ${jackpot} tanga yutdingiz!`);
-                createParticles('💎');
-            } else if(a === b || b === c || a === c) {
-                let small = getRandomWin(2, 8);
+            reel.classList.remove('lose-shake');
+            
+            let jack = getJackpot();
+            if(jack > 0 && a === b && b === c) {
+                win(jack);
+                alert(`🔥 JACKPOT! ${jack} tanga yutdingiz!`);
+            }
+            else if(a === b || b === c || a === c) {
+                let small = Math.random() < 0.3 ? 2 : 1;
                 win(small);
+                if(small > 0) alert(`🎉 Yutuq: ${small} tanga!`);
+                else alert(`❌ Yutuq yo'q!`);
             } else {
-                alert('Hech narsa yo\'q!');
+                alert(`❌ Yutuq yo'q! -2 tanga`);
             }
         }, 300);
     }
     
+    // DICE - qiyin
     function runDice() {
-        if(!pay()) return;
+        if(!pay(1)) return;
         let diceDiv = document.getElementById('diceRes');
         let val = Math.floor(Math.random()*6)+1;
         let diceMap = ['⚀','⚁','⚂','⚃','⚄','⚅'];
@@ -424,106 +311,133 @@
         setTimeout(() => {
             diceDiv.innerText = diceMap[val-1];
             diceDiv.style.transform = 'rotate(0deg)';
-            if(val >= 4) {
-                let mul = val === 6 ? 5 : 3;
-                let amount = mul;
-                win(amount);
+            if(val >= 5) {
+                win(3);
+                alert(`🎲 6! +3 tanga`);
+            } else if(val >= 4) {
+                win(2);
+                alert(`🎲 5-4! +2 tanga`);
+            } else if(val === 3) {
+                win(1);
+                alert(`🎲 3! +1 tanga`);
+            } else {
+                alert(`🎲 ${val}! Yutuq yo'q!`);
             }
         }, 200);
     }
     
+    // COIN - qiyin
     function runCoin(choice) {
-        if(!pay()) return;
-        let res = Math.random() < 0.5 ? 'B' : 'G';
+        if(!pay(1)) return;
+        let res = Math.random() < 0.45 ? 'B' : 'G';
         let coinDiv = document.getElementById('coinRes');
         coinDiv.innerText = res === 'B' ? '🦅' : '🏛️';
         if(choice === res) {
             win(2);
             alert("✅ To'g'ri! +2 tanga");
         } else {
-            alert("❌ Noto'g'ri!");
+            alert("❌ Noto'g'ri! -1 tanga");
         }
     }
     
+    // BOX - qiyin
     function runBox(el) {
-        if(!pay()) return;
-        let reward = getRandomWin(1, 10);
-        el.innerText = `💰 ${reward}`;
-        win(reward);
-        createParticles('✨');
-        setTimeout(() => el.innerText = '🎁', 1200);
+        if(!pay(1)) return;
+        let reward = Math.random() < 0.4 ? Math.floor(Math.random() * 4) + 1 : 0;
+        if(reward > 0) {
+            el.innerText = `💰 ${reward}`;
+            win(reward);
+            alert(`🎁 Sovg'a: ${reward} tanga!`);
+        } else {
+            el.innerText = `💀 0`;
+            alert(`❌ Sovg'a yo'q! -1 tanga`);
+        }
+        setTimeout(() => el.innerText = '🎁', 1000);
     }
     
+    // APPLE - qiyin (40% yutish)
     function runApple() {
-        if(!pay()) return;
+        if(!pay(1)) return;
         let appleDiv = document.getElementById('appleRes');
-        let success = Math.random() > 0.45;
+        let success = Math.random() < 0.4;
         if(success) {
-            let prize = getRandomWin(2, 5);
+            let prize = Math.random() < 0.5 ? 2 : 1;
             appleDiv.innerText = '🍎✨';
             win(prize);
+            alert(`🍎 Olma! +${prize} tanga`);
         } else {
             appleDiv.innerText = '🐛💔';
-            alert('Qurt chiqdi!');
+            alert(`🐛 Qurt chiqdi! -1 tanga`);
         }
         setTimeout(() => appleDiv.innerText = '🍏', 1000);
     }
     
+    // RPS - qiyin
     function runRPS(player) {
-        if(!pay()) return;
+        if(!pay(1)) return;
         let bot = ['✊','✋','✌️'][Math.floor(Math.random()*3)];
         let resDiv = document.getElementById('rpsRes');
         resDiv.innerText = `🤖 ${bot}`;
         if((player === '✊' && bot === '✌️') || (player === '✋' && bot === '✊') || (player === '✌️' && bot === '✋')) {
-            win(3);
-            alert("🎉 Siz yutdingiz! +3");
-        } else if(player === bot) alert("Durrang!");
-        else alert("Bot yutdi!");
+            win(2);
+            alert("🎉 Siz yutdingiz! +2 tanga");
+        } else if(player === bot) {
+            alert("Durrang! Tanga qaytarildi");
+            balance += 1;
+            updateBal();
+        } else {
+            alert("❌ Bot yutdi! -1 tanga");
+        }
     }
     
+    // CARDS - qiyin
     function runCard() {
-        if(!pay()) return;
+        if(!pay(1)) return;
         let cards = ['♠️','♥️','♣️','♦️'];
         let card = cards[Math.floor(Math.random()*4)];
         document.getElementById('cardRes').innerText = card;
-        let mult = card === '♠️' ? 8 : card === '♥️' ? 5 : card === '♣️' ? 3 : 2;
-        win(mult);
+        if(card === '♥️' || card === '♦️') {
+            win(2);
+            alert(`🃏 ${card} - Qizil! +2 tanga`);
+        } else {
+            alert(`🃏 ${card} - Qora! Yutuq yo'q`);
+        }
     }
     
+    // GUESS - qiyin
     function runGuess(num) {
-        if(!pay()) return;
+        if(!pay(1)) return;
         let secret = Math.floor(Math.random()*3)+1;
         if(num === secret) {
-            win(4);
-            alert(`To'g'ri! +4 tanga (javob ${secret})`);
-        } else alert(`Xato! Javob ${secret} edi`);
+            win(3);
+            alert(`✅ To'g'ri! +3 tanga (javob ${secret})`);
+        } else {
+            alert(`❌ Xato! Javob ${secret} edi`);
+        }
     }
     
+    // BOMB - qiyin (35% xazina)
     function runBomb() {
-        if(!pay()) return;
+        if(!pay(1)) return;
         let bombDiv = document.getElementById('bombRes');
-        let success = Math.random() > 0.45;
+        let success = Math.random() < 0.35;
         if(success) {
-            let prize = getRandomWin(3, 8);
+            let prize = Math.floor(Math.random() * 4) + 2;
             bombDiv.innerText = '💎✨';
             win(prize);
+            alert(`💎 Xazina! +${prize} tanga`);
         } else {
             bombDiv.innerText = '💥💣';
-            alert("Portladi! Tanga yo'qotdingiz");
+            alert(`💥 Portladi! -1 tanga`);
         }
         setTimeout(() => bombDiv.innerText = '⛏️', 1000);
     }
     
-    function closeGame() { document.getElementById('overlay').style.display = 'none'; }
+    function closeGame() { 
+        document.getElementById('overlay').style.display = 'none'; 
+    }
     
-    // daily check + load
-    (function init() {
-        updateUI();
-        let now = Date.now();
-        if(now - lastDaily > 86400000) {
-            // can show optional notif
-        }
-    })();
+    updateBal();
 </script>
 </body>
 </html>
